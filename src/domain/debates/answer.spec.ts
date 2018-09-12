@@ -40,4 +40,25 @@ describe('Answer', () => {
 
     expect(firstAnswer.equals(secondAnswer)).toBe(false);
   });
+
+  describe('Answer.createPositive', () => {
+    it('creates positive answer', () => {
+      const positiveAnswer = Answer.createPositive(debateId, answer);
+      expect(positiveAnswer.answerType).toBe(AnswerType.POSITIVE);
+    });
+  });
+
+  describe('Answer.createNegative', () => {
+    it('creates positive answer', () => {
+      const negativeAnswer = Answer.createNegative(debateId, answer);
+      expect(negativeAnswer.answerType).toBe(AnswerType.NEGATIVE);
+    });
+  });
+
+  describe('Answer.createNeutral', () => {
+    it('creates positive answer', () => {
+      const neutralAnswer = Answer.createNeutral(debateId, answer);
+      expect(neutralAnswer.answerType).toBe(AnswerType.NEUTRAL);
+    });
+  });
 });

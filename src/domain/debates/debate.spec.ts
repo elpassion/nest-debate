@@ -36,21 +36,21 @@ describe('Debate', () => {
     const answer = 'Positive Answer';
 
     debate.setPositiveAnswer(answer);
-    expect(debate.positiveAnswer).toEqual(new Answer(debate.id, AnswerType.POSITIVE, answer));
+    expect(debate.positiveAnswer).toEqual(Answer.createPositive(debate.id, answer));
   });
 
   it('has negative answer', () => {
     const answer = 'Negative Answer';
 
     debate.setNegativeAnswer(answer);
-    expect(debate.negativeAnswer).toEqual(new Answer(debate.id, AnswerType.NEGATIVE, answer));
+    expect(debate.negativeAnswer).toEqual(Answer.createNegative(debate.id, answer));
   });
 
   it('has neutral answer', () => {
     const answer = 'Neutral Answer';
 
     debate.setNeutralAnswer(answer);
-    expect(debate.neutralAnswer).toEqual(new Answer(debate.id, AnswerType.NEUTRAL, answer));
+    expect(debate.neutralAnswer).toEqual(Answer.createNeutral(debate.id, answer));
   });
 
   describe('DebateId', () => {

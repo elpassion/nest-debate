@@ -20,15 +20,15 @@ export default class Debate {
   }
 
   public setPositiveAnswer(answer: string) {
-    this._positiveAnswer = new Answer(this.id, AnswerType.POSITIVE, answer);
+    this._positiveAnswer = Answer.createPositive(this.id, answer);
   }
 
   public setNegativeAnswer(answer: string) {
-    this._negativeAnswer = new Answer(this.id, AnswerType.NEGATIVE, answer);
+    this._negativeAnswer = Answer.createNegative(this.id, answer);
   }
 
   public setNeutralAnswer(answer: string) {
-    this._neutralAnswer = new Answer(this.id, AnswerType.NEUTRAL, answer);
+    this._neutralAnswer = Answer.createNeutral(this.id, answer);
   }
 
   public get question(): string { return this._question; }

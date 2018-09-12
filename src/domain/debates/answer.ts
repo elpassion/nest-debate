@@ -8,6 +8,18 @@ export enum AnswerType {
 }
 
 export default class Answer implements IValueObject {
+  static createPositive(debateId: DebateId, answer: string): Answer {
+    return new Answer(debateId, AnswerType.POSITIVE, answer);
+  }
+
+  static createNegative(debateId: DebateId, answer: string): Answer {
+    return new Answer(debateId, AnswerType.NEGATIVE, answer);
+  }
+
+  static createNeutral(debateId: DebateId, answer: string): Answer {
+    return new Answer(debateId, AnswerType.NEUTRAL, answer);
+  }
+
   constructor(readonly debateId: DebateId, readonly answerType: AnswerType, readonly answer: string) {}
 
   public equals(other: any): boolean {
