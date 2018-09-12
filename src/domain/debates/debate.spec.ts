@@ -1,6 +1,7 @@
 import * as uuid from 'uuid';
 
 import Debate, { DebateId } from './debate';
+import Answer, { AnswerType } from './answer';
 
 describe('Debate', () => {
   let debateQuestion: string;
@@ -35,21 +36,21 @@ describe('Debate', () => {
     const answer = 'Positive Answer';
 
     debate.setPositiveAnswer(answer);
-    expect(debate.positiveAnswer).toEqual(answer);
+    expect(debate.positiveAnswer).toEqual(new Answer(debate.id, AnswerType.POSITIVE, answer));
   });
 
   it('has negative answer', () => {
     const answer = 'Negative Answer';
 
     debate.setNegativeAnswer(answer);
-    expect(debate.negativeAnswer).toEqual(answer);
+    expect(debate.negativeAnswer).toEqual(new Answer(debate.id, AnswerType.NEGATIVE, answer));
   });
 
   it('has neutral answer', () => {
     const answer = 'Neutral Answer';
 
     debate.setNeutralAnswer(answer);
-    expect(debate.neutralAnswer).toEqual(answer);
+    expect(debate.neutralAnswer).toEqual(new Answer(debate.id, AnswerType.NEUTRAL, answer));
   });
 
   describe('DebateId', () => {
