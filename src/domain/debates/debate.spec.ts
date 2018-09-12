@@ -13,15 +13,11 @@ describe('Debate', () => {
     debateId = new DebateId(uuid.v4());
     debateQuestion = 'Debate question';
     ownerId = uuid.v4();
-    debate = new Debate(debateId, debateQuestion, ownerId);
+    debate = new Debate(debateId, debateQuestion);
   });
 
   it('has question', () => {
     expect(debate.question).toEqual(debateQuestion);
-  });
-
-  it('has owner', () => {
-    expect(debate.ownerId).toEqual(ownerId);
   });
 
   it('can update question', () => {

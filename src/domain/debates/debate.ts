@@ -12,7 +12,7 @@ export default class Debate {
   private _negativeAnswer: Answer;
   private _neutralAnswer: Answer;
 
-  constructor(readonly id: DebateId, private _question: string, private _ownerId: string) {
+  constructor(readonly id: DebateId, private _question: string) {
   }
 
   public updateQuestion(newQuestion: string): void {
@@ -32,7 +32,6 @@ export default class Debate {
   }
 
   public get question(): string { return this._question; }
-  public get ownerId(): string { return this._ownerId; }
   public get positiveAnswer(): Answer { return this._positiveAnswer; }
   public get negativeAnswer(): Answer { return this._negativeAnswer; }
   public get neutralAnswer(): Answer { return this._neutralAnswer; }
