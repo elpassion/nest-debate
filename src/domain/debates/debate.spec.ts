@@ -1,44 +1,18 @@
 import * as uuid from 'uuid';
 
-class Debate {
-  private _positiveAnswer: string;
-  private _negativeAnswer: string;
-  private _neutralAnswer: string;
-
-  constructor(private id: string, private _question: string, private _ownerId: string) {}
-
-  public updateQuestion(newQuestion: string): void {
-    this._question = newQuestion;
-  }
-
-  public setPositiveAnswer(answer: string) {
-    this._positiveAnswer = answer;
-  }
-
-  public setNegativeAnswer(answer: string) {
-    this._negativeAnswer = answer;
-  }
-
-  public setNeutralAnswer(answer: string) {
-    this._neutralAnswer = answer;
-  }
-
-  public get question(): string { return this._question; }
-  public get ownerId(): string { return this._ownerId; }
-  public get positiveAnswer(): string { return this._positiveAnswer; }
-  public get negativeAnswer(): string { return this._negativeAnswer; }
-  public get neutralAnswer(): string { return this._neutralAnswer; }
-}
+import Debate, { DebateId } from './debate';
 
 describe('Debate', () => {
   let debateQuestion: string;
   let ownerId: string;
+  let debateId: DebateId;
   let debate: Debate;
 
   beforeEach(() => {
+    debateId = new DebateId(uuid.v4());
     debateQuestion = 'Debate question';
     ownerId = uuid.v4();
-    debate = new Debate(uuid.v4(), debateQuestion, ownerId);
+    debate = new Debate(debateId, debateQuestion, ownerId);
   });
 
   it('has question', () => {
