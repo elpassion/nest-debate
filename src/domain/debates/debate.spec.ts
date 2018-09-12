@@ -51,4 +51,21 @@ describe('Debate', () => {
     debate.setNeutralAnswer(answer);
     expect(debate.neutralAnswer).toEqual(answer);
   });
+
+  describe('DebateId', () => {
+    it('equals other debate id with same id', () => {
+      const stringId = uuid.v4();
+      const firstId = new DebateId(stringId);
+      const secondId = new DebateId(stringId);
+
+      expect(firstId.equals(secondId)).toBe(true);
+    });
+
+    it('does not equal different debate id', () => {
+      const firstId = new DebateId(uuid.v4());
+      const secondId = new DebateId(uuid.v4());
+
+      expect(firstId.equals(secondId)).toBe(false);
+    });
+  });
 });

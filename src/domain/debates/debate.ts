@@ -1,6 +1,10 @@
 import AggregateId from '../aggregate_id';
 
-export class DebateId extends AggregateId<Debate> {}
+export class DebateId extends AggregateId {
+  public equals(other: any): boolean {
+    return other instanceof DebateId && this.id === other.id;
+  }
+}
 
 export default class Debate {
   private _positiveAnswer: string;
