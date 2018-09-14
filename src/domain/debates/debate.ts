@@ -33,7 +33,7 @@ export default class Debate {
     this._neutralAnswer = Answer.createNeutral(this.id, answer);
   }
 
-  public publishAt(date: Date): void {
+  public schedulePublicationAt(date: Date): void {
     this._publicationDate = date;
   }
 

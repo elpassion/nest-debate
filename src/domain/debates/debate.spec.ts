@@ -59,14 +59,14 @@ describe('Debate', () => {
       });
 
       it('can be published when all answers are set', () => {
-        debate.publishAt(new Date());
+        debate.schedulePublicationAt(new Date());
 
         expect(debate.isPublished).toBe(true);
       });
 
       it('can be scheduled for publication', () => {
         const publishAt = new Date(new Date().getTime() + 1000 * 60 * 5);
-        debate.publishAt(publishAt);
+        debate.schedulePublicationAt(publishAt);
 
         expect(debate.isPublished).toBe(false);
 
