@@ -37,6 +37,10 @@ export default class Debate {
     this._publicationDate = date;
   }
 
+  public publish(): void {
+    this.schedulePublicationAt(DateProvider.getCurrentDate());
+  }
+
   public get question(): string { return this._question; }
   public get positiveAnswer(): Answer { return this._positiveAnswer; }
   public get negativeAnswer(): Answer { return this._negativeAnswer; }

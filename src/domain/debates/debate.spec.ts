@@ -59,7 +59,7 @@ describe('Debate', () => {
       });
 
       it('can be published when all answers are set', () => {
-        debate.schedulePublicationAt(new Date());
+        debate.publish();
 
         expect(debate.isPublished).toBe(true);
       });
