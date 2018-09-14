@@ -2,6 +2,7 @@ import * as uuid from 'uuid';
 
 import Debate, { DebateId } from './debate';
 import Answer, { AnswerType } from './answer';
+import DateProvider from '../support/date_provider';
 
 describe('Debate', () => {
   let debateQuestion: string;
@@ -49,6 +50,33 @@ describe('Debate', () => {
     expect(debate.neutralAnswer).toEqual(Answer.createNeutral(debate.id, answer));
   });
 
+  describe('publishing debate', () => {
+    describe('when all answers set', () => {
+      beforeEach(() => {
+        debate.setPositiveAnswer('Yes');
+        debate.setNegativeAnswer('No');
+        debate.setNeutralAnswer('Maybe');
+      });
+
+      it('can be published when all answers are set', () => {
+        debate.publishAt(new Date());
+
+        expect(debate.isPublished).toBe(true);
+      });
+
+      it('can be scheduled for publication', () => {
+        const publishAt = new Date(new Date().getTime() + 1000 * 60 * 5);
+        debate.publishAt(publishAt);
+
+        expect(debate.isPublished).toBe(false);
+
+        travelInTimeTo(publishAt, () => {
+          expect(debate.isPublished).toBe(true);
+        });
+      });
+    });
+  });
+
   describe('DebateId', () => {
     it('equals other debate id with same id', () => {
       const stringId = uuid.v4();
@@ -65,4 +93,11 @@ describe('Debate', () => {
       expect(firstId.equals(secondId)).toBe(false);
     });
   });
+
+  function travelInTimeTo(date: Date, action: () => void): void {
+    const originalDategenerationStrategy = DateProvider.dateGenerationStrategy;
+    DateProvider.dateGenerationStrategy = () => date;
+    action();
+    DateProvider.dateGenerationStrategy = originalDategenerationStrategy;
+  }
 });
