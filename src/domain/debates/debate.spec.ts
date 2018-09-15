@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
 
-import Debate, { DebateId } from './debate';
+import Debate, { DebateId, AnswersMissing } from './debate';
 import Answer, { AnswerType } from './answer';
 import DateProvider from '../support/date_provider';
 
@@ -50,7 +50,7 @@ describe('Debate', () => {
     expect(debate.neutralAnswer).toEqual(Answer.createNeutral(debate.id, answer));
   });
 
-  describe('publishing debate', () => {
+  describe('Publishing', () => {
     describe('when all answers set', () => {
       beforeEach(() => {
         debate.setPositiveAnswer('Yes');
@@ -74,6 +74,36 @@ describe('Debate', () => {
           expect(debate.isPublished).toBe(true);
         });
       });
+    });
+
+    describe('When not all answers are set', () => {
+      describe.each(
+        [
+          [null, null, null],
+          ['Yes', null, null],
+          [null, 'No', null],
+          [null, null, 'Maybe'],
+          ['Yes', 'No', null],
+          ['Yes', null, 'Maybe'],
+          [null, 'No', 'Maybe'],
+        ])(
+        'when positive answer: %s, negative answer: %s, neutral answer: %s',
+        (positiveAnswer, negativeAnswer, neutralAnswer) => {
+          beforeEach(() => {
+            if (positiveAnswer) { debate.setPositiveAnswer(positiveAnswer); }
+            if (negativeAnswer) { debate.setNegativeAnswer(negativeAnswer); }
+            if (neutralAnswer) { debate.setNeutralAnswer(neutralAnswer); }
+          });
+
+          it('cannot be published', () => {
+            expect(() => { debate.publish(); }).toThrowError(AnswersMissing);
+          });
+
+          it('cannot be scheduled for publication', () => {
+            expect(() => { debate.schedulePublicationAt(new Date()); }).toThrowError(AnswersMissing);
+          });
+        },
+      );
     });
   });
 
