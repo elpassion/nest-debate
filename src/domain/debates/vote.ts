@@ -15,16 +15,8 @@ export default class Vote {
     return new Vote(voteId, answer.debateId, answer.answerType);
   }
 
-  public changeToNegative(): void {
-    this._answerType = AnswerType.NEGATIVE;
-  }
-
-  public changeToNeutral(): void {
-    this._answerType = AnswerType.NEUTRAL;
-  }
-
-  public changeToPositive(): void {
-    this._answerType = AnswerType.POSITIVE;
+  public changeAnswerTo(answer: Answer): void {
+    this._answerType = answer.answerType;
   }
 
   public get isPositive(): boolean { return this._answerType === AnswerType.POSITIVE; }
