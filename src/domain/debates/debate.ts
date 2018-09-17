@@ -48,21 +48,15 @@ export default class Debate {
   }
 
   public votePositive(voteId: VoteId): Vote {
-    if (!this.isPublished) { throw new VotingNotPossibleError('debate is not published'); }
-
-    return new Vote(voteId, this.id, this._positiveAnswer.answerType);
+    return this.voteFor(voteId, this._positiveAnswer);
   }
 
   public voteNegative(voteId: VoteId): Vote {
-    if (!this.isPublished) { throw new VotingNotPossibleError('debate is not published'); }
-
-    return new Vote(voteId, this.id, this._negativeAnswer.answerType);
+    return this.voteFor(voteId, this._negativeAnswer);
   }
 
   public voteNeutral(voteId: VoteId): Vote {
-    if (!this.isPublished) { throw new VotingNotPossibleError('debate is not published'); }
-
-    return new Vote(voteId, this.id, this._neutralAnswer.answerType);
+    return this.voteFor(voteId, this._neutralAnswer);
   }
 
   public get question(): string { return this._question; }
@@ -77,5 +71,11 @@ export default class Debate {
       this._negativeAnswer,
       this._neutralAnswer,
     ].every((answer) => answer != null);
+  }
+
+  private voteFor(voteId: VoteId, answer: Answer): Vote {
+    if (!this.isPublished) { throw new VotingNotPossibleError('debate is not published'); }
+
+    return Vote.for(voteId, answer);
   }
 }

@@ -1,17 +1,19 @@
 import * as uuid from 'uuid';
 import { DebateId } from './debate';
-import { AnswerType } from './answer';
+import Answer from './answer';
 import Vote, { VoteId } from './vote';
 
 describe('Vote', () => {
   let debateId: DebateId;
   let voteId: VoteId;
+  let answer: Answer;
   let vote: Vote;
 
   beforeEach(() => {
     debateId = new DebateId(uuid.v4());
     voteId = new VoteId(uuid.v4());
-    vote = new Vote(voteId, debateId, AnswerType.POSITIVE);
+    answer = Answer.createPositive(debateId, 'answer');
+    vote = Vote.for(voteId, answer);
   });
 
   it('is positive', () => {

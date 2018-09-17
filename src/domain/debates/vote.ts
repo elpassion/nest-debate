@@ -1,6 +1,6 @@
 import AggregateId from '../aggregate_id';
 import { DebateId } from './debate';
-import { AnswerType } from './answer';
+import Answer, { AnswerType } from './answer';
 
 export class VoteId extends AggregateId {
   public equals(other: any): boolean {
@@ -9,7 +9,11 @@ export class VoteId extends AggregateId {
 }
 
 export default class Vote {
-  constructor(readonly id: VoteId, readonly debateId: DebateId, private _answerType: AnswerType) {}
+  private constructor(readonly id: VoteId, readonly debateId: DebateId, private _answerType: AnswerType) {}
+
+  public static for(voteId: VoteId, answer: Answer): Vote {
+    return new Vote(voteId, answer.debateId, answer.answerType);
+  }
 
   public changeToNegative(): void {
     this._answerType = AnswerType.NEGATIVE;
