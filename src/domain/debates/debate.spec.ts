@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
 
-import Debate, { DebateId, AnswersMissing } from './debate';
+import Debate, { DebateId, AnswersMissing, VotingNotPossibleError } from './debate';
 import Answer, { AnswerType } from './answer';
 import Vote, { VoteId } from './vote';
 import DateProvider from '../support/date_provider';
@@ -141,6 +141,16 @@ describe('Debate', () => {
         const vote: Vote = debate.voteNeutral(newVoteId);
 
         expect(vote.isNeutral).toBe(true);
+      });
+    });
+
+    describe('When debate is not published', () => {
+      it('does not allow voting', () => {
+        const newVoteId = new VoteId(uuid.v4());
+
+        expect(() => { debate.votePositive(newVoteId); }).toThrowError(VotingNotPossibleError);
+        expect(() => { debate.voteNegative(newVoteId); }).toThrowError(VotingNotPossibleError);
+        expect(() => { debate.voteNeutral(newVoteId); }).toThrowError(VotingNotPossibleError);
       });
     });
   });

@@ -10,6 +10,7 @@ export class DebateId extends AggregateId {
 }
 
 export class AnswersMissing extends Error {}
+export class VotingNotPossibleError extends Error {}
 
 export default class Debate {
   private _positiveAnswer: Answer = null;
@@ -47,14 +48,20 @@ export default class Debate {
   }
 
   public votePositive(voteId: VoteId): Vote {
+    if (!this.isPublished) { throw new VotingNotPossibleError('debate is not published'); }
+
     return new Vote(voteId, this.id, this._positiveAnswer.answerType);
   }
 
   public voteNegative(voteId: VoteId): Vote {
+    if (!this.isPublished) { throw new VotingNotPossibleError('debate is not published'); }
+
     return new Vote(voteId, this.id, this._negativeAnswer.answerType);
   }
 
   public voteNeutral(voteId: VoteId): Vote {
+    if (!this.isPublished) { throw new VotingNotPossibleError('debate is not published'); }
+
     return new Vote(voteId, this.id, this._neutralAnswer.answerType);
   }
 
