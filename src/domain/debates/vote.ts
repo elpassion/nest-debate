@@ -2,6 +2,8 @@ import AggregateId from '../aggregate_id';
 import { DebateId } from './debate';
 import Answer, { AnswerType } from './answer';
 
+export class CantChangeVoteDebateError extends Error {}
+
 export class VoteId extends AggregateId {
   public equals(other: any): boolean {
     return other instanceof VoteId && this.id === other.id;
@@ -16,6 +18,8 @@ export default class Vote {
   }
 
   public changeAnswerTo(answer: Answer): void {
+    if (!this.debateId.equals(answer.debateId)) { throw new CantChangeVoteDebateError('provided answer is for different debate'); }
+
     this._answerType = answer.answerType;
   }
 

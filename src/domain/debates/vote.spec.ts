@@ -1,7 +1,7 @@
 import * as uuid from 'uuid';
 import { DebateId } from './debate';
 import Answer from './answer';
-import Vote, { VoteId } from './vote';
+import Vote, { VoteId, CantChangeVoteDebateError } from './vote';
 
 describe('Vote', () => {
   let debateId: DebateId;
@@ -45,5 +45,13 @@ describe('Vote', () => {
     vote.changeAnswerTo(positiveAnswer);
 
     expect(vote.isPositive).toBe(true);
+  });
+
+  // tslint:disable-next-line:quotemark
+  it("can't be changed to different debates answer", () => {
+    const newDebateId = new DebateId(uuid.v4());
+    const newAnswer = Answer.createNegative(newDebateId, 'negative answer');
+
+    expect(() => { vote.changeAnswerTo(newAnswer); }).toThrowError(CantChangeVoteDebateError);
   });
 });
