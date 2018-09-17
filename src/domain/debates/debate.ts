@@ -49,7 +49,7 @@ export default class Debate {
   public get positiveAnswer(): Answer { return this._positiveAnswer; }
   public get negativeAnswer(): Answer { return this._negativeAnswer; }
   public get neutralAnswer(): Answer { return this._neutralAnswer; }
-  public get isPublished(): boolean { return this._publicationDate <= DateProvider.getCurrentDate(); }
+  public get isPublished(): boolean { return !!this._publicationDate && this._publicationDate <= DateProvider.getCurrentDate(); }
 
   private allAnswersSet(): boolean {
     return [

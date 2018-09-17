@@ -51,6 +51,10 @@ describe('Debate', () => {
   });
 
   describe('Publishing', () => {
+    it('is not published', () => {
+      expect(debate.isPublished).toBe(false);
+    });
+
     describe('when all answers set', () => {
       beforeEach(() => {
         debate.setPositiveAnswer('Yes');
