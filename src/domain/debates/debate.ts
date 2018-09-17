@@ -1,6 +1,7 @@
 import AggregateId from '../aggregate_id';
 import Answer, { AnswerType } from './answer';
 import DateProvider from '../support/date_provider';
+import Vote, { VoteId } from './vote';
 
 export class DebateId extends AggregateId {
   public equals(other: any): boolean {
@@ -43,6 +44,18 @@ export default class Debate {
 
   public publish(): void {
     this.schedulePublicationAt(DateProvider.getCurrentDate());
+  }
+
+  public votePositive(voteId: VoteId): Vote {
+    return new Vote(voteId, this.id, this._positiveAnswer.answerType);
+  }
+
+  public voteNegative(voteId: VoteId): Vote {
+    return new Vote(voteId, this.id, this._negativeAnswer.answerType);
+  }
+
+  public voteNeutral(voteId: VoteId): Vote {
+    return new Vote(voteId, this.id, this._neutralAnswer.answerType);
   }
 
   public get question(): string { return this._question; }

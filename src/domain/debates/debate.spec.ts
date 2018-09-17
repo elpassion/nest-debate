@@ -2,6 +2,7 @@ import * as uuid from 'uuid';
 
 import Debate, { DebateId, AnswersMissing } from './debate';
 import Answer, { AnswerType } from './answer';
+import Vote, { VoteId } from './vote';
 import DateProvider from '../support/date_provider';
 
 describe('Debate', () => {
@@ -108,6 +109,39 @@ describe('Debate', () => {
           });
         },
       );
+    });
+  });
+
+  describe('Voting', () => {
+    describe('when debate is published', () => {
+      let newVoteId: VoteId;
+
+      beforeEach(() => {
+        newVoteId = new VoteId(uuid.v4());
+
+        debate.setPositiveAnswer('Yes');
+        debate.setNegativeAnswer('No');
+        debate.setNeutralAnswer('Maybe');
+        debate.publish();
+      });
+
+      it('allows voting for positive answer', () => {
+        const vote: Vote = debate.votePositive(newVoteId);
+
+        expect(vote.isPositive).toBe(true);
+      });
+
+      it('allows voting for positive answer', () => {
+        const vote: Vote = debate.voteNegative(newVoteId);
+
+        expect(vote.isNegative).toBe(true);
+      });
+
+      it('allows voting for neutral answer', () => {
+        const vote: Vote = debate.voteNeutral(newVoteId);
+
+        expect(vote.isNeutral).toBe(true);
+      });
     });
   });
 
