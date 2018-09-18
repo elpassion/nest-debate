@@ -11,12 +11,12 @@ export default class InMemoryVotesRepository implements IVotesRepository {
   }
 
   save(vote: Vote): Promise<void> {
-    this._votes.set(vote.id.id, vote);
+    this._votes.set(vote.id.toString(), vote);
     return Promise.resolve();
   }
 
   get(voteId: VoteId): Promise<Vote> {
-    const vote = this._votes.get(voteId.id);
+    const vote = this._votes.get(voteId.toString());
     return Promise.resolve(vote || null);
   }
 }

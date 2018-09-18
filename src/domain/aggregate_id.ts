@@ -5,5 +5,9 @@ export default abstract class AggregateId implements IValueObject {
 
   public abstract equals(other: any): boolean;
 
+  public toString(): string {
+    return this.id;
+  }
+
   public get id() { return this._id; }
 }

@@ -12,12 +12,12 @@ export default class InMemoryDebatesRepository implements IDebatesRepository {
   }
 
   public get(debateId: DebateId): Promise<Debate> {
-    const debate = this._debates.get(debateId.id);
+    const debate = this._debates.get(debateId.toString());
     return Promise.resolve(debate || null);
   }
 
   public save(debate: Debate): Promise<void> {
-    this._debates.set(debate.id.id, debate);
+    this._debates.set(debate.id.toString(), debate);
     return Promise.resolve();
   }
 
@@ -27,7 +27,7 @@ export default class InMemoryDebatesRepository implements IDebatesRepository {
   }
 
   public delete(debate: Debate): Promise<void> {
-    this._debates.delete(debate.id.id);
+    this._debates.delete(debate.id.toString());
     return Promise.resolve();
   }
 }
