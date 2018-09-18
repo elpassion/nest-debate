@@ -2,6 +2,7 @@ import Debate, { DebateId } from '../domain/debates/debate';
 import Vote, { VoteId } from '../domain/debates/vote';
 import IDebatesRepository from '../domain/debates/debates_repository';
 import IVotesRepository from '../domain/debates/votes_repository';
+import { Injectable, Inject } from '@nestjs/common';
 
 interface IVotingStrategy {
   create(voteId: VoteId, debate: Debate): Vote;
@@ -34,6 +35,7 @@ export interface IVotingService {
   changeVote(debateId: DebateId, voteId: VoteId, voteType: VoteType): Promise<Vote>;
 }
 
+@Injectable()
 export default class VotingService implements IVotingService {
   private static readonly VOTING_STRATEGIES = new Map<VoteType, IVotingStrategy>([
     [VoteType.POSITIVE, positiveStrategy],
@@ -41,7 +43,10 @@ export default class VotingService implements IVotingService {
     [VoteType.NEUTRAL, neutralStrategy],
   ]);
 
-  constructor(private readonly _debatesRepository: IDebatesRepository, private readonly _votesRepository: IVotesRepository) {}
+  constructor(
+    @Inject('IDebatesRepository') private readonly _debatesRepository: IDebatesRepository,
+    @Inject('IVotesRepository') private readonly _votesRepository: IVotesRepository,
+  ) {}
 
   public async createVote(debateId: DebateId, voteType: VoteType): Promise<Vote> {
     const debate = await this._debatesRepository.get(debateId);
@@ -67,3 +72,8 @@ export default class VotingService implements IVotingService {
     return VotingService.VOTING_STRATEGIES.get(voteType);
   }
 }
+
+export const provider = {
+  provide: 'IVotingService',
+  useClass: VotingService,
+};

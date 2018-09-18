@@ -1,4 +1,4 @@
-import { Controller, Post, Param, Body, Put } from '@nestjs/common';
+import { Controller, Post, Param, Body, Put, Inject } from '@nestjs/common';
 import { DebateId } from '../domain/debates/debate';
 import Vote, { VoteId } from '../domain/debates/vote';
 import { IVotingService, VoteType } from '../services/voting.service';
@@ -26,7 +26,7 @@ class VoteDto {
 
 @Controller('/debates/:debateId/votes')
 export class VotesController {
-  constructor(private _votingService: IVotingService) {}
+  constructor(@Inject('IVotingService') private readonly _votingService: IVotingService) {}
 
   @Post()
   async create(@Param('debateId') debateId: DebateId, @Body('voteType') voteType: string): Promise<VoteDto> {
