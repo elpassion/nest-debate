@@ -1,8 +1,7 @@
-import { Controller, Post, Param, Body } from '@nestjs/common';
-import IDebatesRepository from '../domain/debates/debates_repository';
-import IVotesRepository from '../domain/debates/votes_repository';
+import { Controller, Post, Param, Body, Put } from '@nestjs/common';
 import { DebateId } from '../domain/debates/debate';
-import Vote from '../domain/debates/vote';
+import Vote, { VoteId } from '../domain/debates/vote';
+import { IVotingService, VoteType } from '../services/voting.service';
 
 class VoteDto {
   public static fromVote(vote: Vote): VoteDto {
@@ -27,19 +26,17 @@ class VoteDto {
 
 @Controller('/debates/:debateId/votes')
 export class VotesController {
-  constructor(private _debatesRepository: IDebatesRepository, private _votesRepository: IVotesRepository) {}
+  constructor(private _votingService: IVotingService) {}
 
   @Post()
-  async create(@Param('debateId') debateId: DebateId, @Body('voteType') voteType): Promise<VoteDto> {
-    const voteId = await this._votesRepository.nextId();
-    const debate = await this._debatesRepository.get(debateId);
+  async create(@Param('debateId') debateId: DebateId, @Body('voteType') voteType: string): Promise<VoteDto> {
+    const vote = await this._votingService.createVote(debateId, VoteType[voteType]);
+    return VoteDto.fromVote(vote);
+  }
 
-    let vote: Vote;
-    if (voteType === 'POSITIVE') { vote = debate.votePositive(voteId); }
-    else if (voteType === 'NEGATIVE') { vote = debate.voteNegative(voteId); }
-    else if (voteType === 'NEUTRAL') { vote = debate.voteNeutral(voteId); }
-
-    await this._votesRepository.save(vote);
+  @Put('/:voteId')
+  async update(@Param('debateId') debateId: DebateId, @Param('voteId') voteId: VoteId, @Body('voteType') voteType: string): Promise<VoteDto> {
+    const vote = await this._votingService.changeVote(debateId, voteId, VoteType[voteType]);
     return VoteDto.fromVote(vote);
   }
 }
