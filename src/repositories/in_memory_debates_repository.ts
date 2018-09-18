@@ -4,7 +4,7 @@ import IDebatesRepository from '../domain/debates/debates_repository';
 import Debate, { DebateId } from '../domain/debates/debate';
 
 export default class InMemoryDebatesRepository implements IDebatesRepository {
-  private _debates = new Map<DebateId, Debate>();
+  private _debates = new Map<string, Debate>();
 
   public nextId(): Promise<DebateId> {
     const debateId = new DebateId(uuid.v4());
@@ -12,12 +12,12 @@ export default class InMemoryDebatesRepository implements IDebatesRepository {
   }
 
   public get(debateId: DebateId): Promise<Debate> {
-    const debate = this._debates.get(debateId);
+    const debate = this._debates.get(debateId.id);
     return Promise.resolve(debate || null);
   }
 
   public save(debate: Debate): Promise<void> {
-    this._debates.set(debate.id, debate);
+    this._debates.set(debate.id.id, debate);
     return Promise.resolve();
   }
 
@@ -27,7 +27,7 @@ export default class InMemoryDebatesRepository implements IDebatesRepository {
   }
 
   public delete(debate: Debate): Promise<void> {
-    this._debates.delete(debate.id);
+    this._debates.delete(debate.id.id);
     return Promise.resolve();
   }
 }
