@@ -1,7 +1,9 @@
+import { IValueObject } from '../value_object';
+
 export class StartIsNotBeforeFinish extends Error {}
 
-export default class Publication {
-  constructor(private readonly _startAt?: Date, private readonly _finishAt?: Date) {
+export default class Publication implements IValueObject {
+  constructor(protected readonly startDate?: Date, protected readonly finishDate?: Date) {
     this.checkThatStartIsBeforeFinish();
   }
 
@@ -10,22 +12,28 @@ export default class Publication {
   }
 
   public startAt(startAtDate: Date): Publication {
-    return new Publication(startAtDate, this._finishAt);
+    return new Publication(startAtDate, this.finishDate);
   }
 
   public finishAt(finishAtDate: Date): Publication {
-    return new Publication(this._startAt, finishAtDate);
+    return new Publication(this.startDate, finishAtDate);
+  }
+
+  public equals(other: any): boolean {
+    return (other instanceof Publication)
+      && this.startDate.getTime() === other.startDate.getTime()
+      && this.finishDate.getTime() === other.finishDate.getTime();
   }
 
   private startedBefore(date: Date): boolean {
-    return !!this._startAt && this._startAt <= date;
+    return !!this.startDate && this.startDate <= date;
   }
 
   private isFinishedBefore(date: Date): boolean {
-    return !!this._finishAt && this._finishAt <= date;
+    return !!this.finishDate && this.finishDate <= date;
   }
 
   private checkThatStartIsBeforeFinish(): void {
-    if (!!this._startAt && !!this._finishAt && this._startAt > this._finishAt) { throw new StartIsNotBeforeFinish(); }
+    if (!!this.startDate && !!this.finishDate && this.startDate > this.finishDate) { throw new StartIsNotBeforeFinish(); }
   }
 }

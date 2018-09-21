@@ -75,4 +75,46 @@ describe('Publication', () => {
       publication.finishAt(finishAt);
     }).toThrowError(StartIsNotBeforeFinish);
   });
+
+  it('is equal with publication with same dates', () => {
+    const nowTime = new Date().getTime();
+
+    const startAt = new Date(nowTime - 1000 * 60 * 5);
+    const finishAt = new Date(nowTime + 1000 * 60 * 5);
+    const firstPublication = new Publication(startAt, finishAt);
+
+    const secondStartAt = new Date(nowTime - 1000 * 60 * 5);
+    const secondFinishAt = new Date(nowTime + 1000 * 60 * 5);
+    const secondPublication = new Publication(secondStartAt, secondFinishAt);
+
+    expect(firstPublication.equals(secondPublication)).toBe(true);
+  });
+
+  it('is not equal when start dates are different', () => {
+    const nowTime = new Date().getTime();
+
+    const startAt = new Date(nowTime - 1000 * 60 * 5);
+    const finishAt = new Date(nowTime + 1000 * 60 * 5);
+    const firstPublication = new Publication(startAt, finishAt);
+
+    const secondStartAt = new Date(nowTime - 1000 * 60 * 4);
+    const secondFinishAt = new Date(nowTime + 1000 * 60 * 5);
+    const secondPublication = new Publication(secondStartAt, secondFinishAt);
+
+    expect(firstPublication.equals(secondPublication)).toBe(false);
+  });
+
+  it('is not equal when finish dates are different', () => {
+    const nowTime = new Date().getTime();
+
+    const startAt = new Date(nowTime - 1000 * 60 * 5);
+    const finishAt = new Date(nowTime + 1000 * 60 * 5);
+    const firstPublication = new Publication(startAt, finishAt);
+
+    const secondStartAt = new Date(nowTime - 1000 * 60 * 5);
+    const secondFinishAt = new Date(nowTime + 1000 * 60 * 4);
+    const secondPublication = new Publication(secondStartAt, secondFinishAt);
+
+    expect(firstPublication.equals(secondPublication)).toBe(false);
+  });
 });
