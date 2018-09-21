@@ -9,6 +9,14 @@ export default class Publication {
     return this.startedBefore(date) && !this.isFinishedBefore(date);
   }
 
+  public startAt(startAtDate: Date): Publication {
+    return new Publication(startAtDate, this._finishAt);
+  }
+
+  public finishAt(finishAtDate: Date): Publication {
+    return new Publication(this._startAt, finishAtDate);
+  }
+
   private startedBefore(date: Date): boolean {
     return !!this._startAt && this._startAt <= date;
   }
