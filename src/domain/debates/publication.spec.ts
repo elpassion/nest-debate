@@ -1,4 +1,4 @@
-import Publication from './publication';
+import Publication, { StartIsNotBeforeFinish } from './publication';
 
 describe('Publication', () => {
   it('does not last by default', () => {
@@ -21,5 +21,15 @@ describe('Publication', () => {
     const publication = new Publication(startAt, finishAt);
 
     expect(publication.lastsAt(finishAt)).toBe(false);
+  });
+
+  // tslint:disable-next-line:quotemark
+  it("can't be created with start time after end time", () => {
+    expect(() => {
+      const nowTime = new Date().getTime();
+      const startAt = new Date(nowTime + 1000 * 60 * 5);
+      const finishAt = new Date(nowTime - 1000 * 60 * 5);
+      new Publication(startAt, finishAt);
+    }).toThrowError(StartIsNotBeforeFinish);
   });
 });
