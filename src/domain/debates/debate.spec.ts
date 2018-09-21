@@ -79,6 +79,23 @@ describe('Debate', () => {
           expect(debate.isPublished).toBe(true);
         });
       });
+
+      it('can be scheduled for closing', () => {
+        const closeAt = new Date(new Date().getTime() + 1000 * 60 * 5);
+        debate.publish();
+        debate.scheduleClosingAt(closeAt);
+
+        travelInTimeTo(closeAt, () => {
+          expect(debate.isPublished).toBe(false);
+        });
+      });
+
+      it('can be closed', () => {
+        debate.publish();
+        debate.close();
+
+        expect(debate.isPublished).toBe(false);
+      });
     });
 
     describe('When not all answers are set', () => {

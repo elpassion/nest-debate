@@ -17,6 +17,7 @@ export default class Debate {
   private _negativeAnswer: Answer = null;
   private _neutralAnswer: Answer = null;
   private _publicationDate: Date = null;
+  private _closingDate: Date = null;
 
   constructor(readonly id: DebateId, private _question: string) {
   }
@@ -47,6 +48,14 @@ export default class Debate {
     this.schedulePublicationAt(DateProvider.getCurrentDate());
   }
 
+  public scheduleClosingAt(date: Date): void {
+    this._closingDate = date;
+  }
+
+  public close(): void {
+    this.scheduleClosingAt(DateProvider.getCurrentDate());
+  }
+
   public votePositive(voteId: VoteId): Vote {
     return this.voteFor(voteId, this._positiveAnswer);
   }
@@ -63,7 +72,13 @@ export default class Debate {
   public get positiveAnswer(): Answer { return this._positiveAnswer; }
   public get negativeAnswer(): Answer { return this._negativeAnswer; }
   public get neutralAnswer(): Answer { return this._neutralAnswer; }
-  public get isPublished(): boolean { return !!this._publicationDate && this._publicationDate <= DateProvider.getCurrentDate(); }
+  public get isPublished(): boolean {
+    if (!!this._closingDate && DateProvider.getCurrentDate() <= this._closingDate) {
+      return false;
+    }
+
+    return !!this._publicationDate && this._publicationDate <= DateProvider.getCurrentDate();
+  }
 
   private allAnswersSet(): boolean {
     return [
