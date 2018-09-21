@@ -2,6 +2,7 @@ import AggregateId from '../aggregate_id';
 import Answer, { AnswerType } from './answer';
 import DateProvider from '../support/date_provider';
 import Vote, { VoteId } from './vote';
+import Publication from './publication';
 
 export class DebateId extends AggregateId {
   public equals(other: any): boolean {
@@ -16,8 +17,7 @@ export default class Debate {
   private _positiveAnswer: Answer = null;
   private _negativeAnswer: Answer = null;
   private _neutralAnswer: Answer = null;
-  private _publicationDate: Date = null;
-  private _closingDate: Date = null;
+  private _publication: Publication = new Publication();
 
   constructor(readonly id: DebateId, private _question: string) {
   }
@@ -41,7 +41,7 @@ export default class Debate {
   public schedulePublicationAt(date: Date): void {
     if (!this.allAnswersSet()) { throw new AnswersMissing('some answers are missing'); }
 
-    this._publicationDate = date;
+    this._publication = this._publication.startAt(date);
   }
 
   public publish(): void {
@@ -49,7 +49,7 @@ export default class Debate {
   }
 
   public scheduleClosingAt(date: Date): void {
-    this._closingDate = date;
+    this._publication = this._publication.finishAt(date);
   }
 
   public close(): void {
@@ -73,11 +73,7 @@ export default class Debate {
   public get negativeAnswer(): Answer { return this._negativeAnswer; }
   public get neutralAnswer(): Answer { return this._neutralAnswer; }
   public get isPublished(): boolean {
-    if (!!this._closingDate && DateProvider.getCurrentDate() <= this._closingDate) {
-      return false;
-    }
-
-    return !!this._publicationDate && this._publicationDate <= DateProvider.getCurrentDate();
+    return this._publication.lastsAt(DateProvider.getCurrentDate());
   }
 
   private allAnswersSet(): boolean {
