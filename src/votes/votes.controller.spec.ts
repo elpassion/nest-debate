@@ -64,6 +64,12 @@ describe('Votes Controller', () => {
         voteType: 'NEGATIVE',
         debateId: debateId.toString(),
       });
+
+      expect(await controller.update(debateId, voteId, 'NEUTRAL')).toMatchObject({
+        id: voteId.toString(),
+        voteType: 'NEUTRAL',
+        debateId: debateId.toString(),
+      });
     });
   });
 });

@@ -29,6 +29,6 @@ describe('VotesRepository', () => {
     await votesRepository.save(vote);
     const persistedVote = await votesRepository.get(voteId);
 
-    expect(vote.id.equals(persistedVote.id));
+    expect(vote.id.equals(persistedVote.id)).toBe(true);
   });
 });
