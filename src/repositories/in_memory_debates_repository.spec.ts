@@ -1,8 +1,7 @@
-import * as uuid from 'uuid';
-
 import IDebatesRepository from '../domain/debates/debates_repository';
 import Debate, { DebateId } from '../domain/debates/debate';
 import InMemoryDebatesRepository from './in_memory_debates_repository';
+import { PinAlreadyReserved } from '../domain/debates/services/pin_generator';
 
 describe('DebatesRepository', () => {
   let debatesRepository: IDebatesRepository;
@@ -58,6 +57,11 @@ describe('DebatesRepository', () => {
     const debate = await debatesRepository.get(firstDebateId);
 
     expect(debate).toBeNull();
+  });
+
+  it('throws error if pin already reserverd', async () => {
+    await debatesRepository.reservePin('12345');
+    await expect(debatesRepository.reservePin('12345')).rejects.toThrowError(PinAlreadyReserved);
   });
 
   function createDebate(debateId: DebateId, question: string, positiveAnswer?: string, negativeAnswer?: string, neutralAnswer?: string): Debate {
