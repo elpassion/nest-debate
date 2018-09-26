@@ -49,14 +49,14 @@ describe('Answer', () => {
   });
 
   describe('Answer.createNegative', () => {
-    it('creates positive answer', () => {
+    it('creates negative answer', () => {
       const negativeAnswer = Answer.createNegative(debateId, answer);
       expect(negativeAnswer.answerType).toBe(AnswerType.NEGATIVE);
     });
   });
 
   describe('Answer.createNeutral', () => {
-    it('creates positive answer', () => {
+    it('creates neutral answer', () => {
       const neutralAnswer = Answer.createNeutral(debateId, answer);
       expect(neutralAnswer.answerType).toBe(AnswerType.NEUTRAL);
     });

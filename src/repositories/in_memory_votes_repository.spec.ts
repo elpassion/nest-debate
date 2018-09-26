@@ -1,4 +1,5 @@
-import Vote from '../domain/debates/vote';
+import * as uuid from 'uuid';
+import Vote, { VoteId } from '../domain/debates/vote';
 import Answer from '../domain/debates/answer';
 import IDebatesRepository from '../domain/debates/debates_repository';
 import InMemoryDebatesRepository from './in_memory_debates_repository';
@@ -30,5 +31,12 @@ describe('VotesRepository', () => {
     const persistedVote = await votesRepository.get(voteId);
 
     expect(vote.id.equals(persistedVote.id)).toBe(true);
+  });
+
+  it('returns null when no element found', async () => {
+    const voteId = new VoteId(uuid.v4());
+    const vote = await votesRepository.get(voteId);
+
+    expect(vote).toBeNull();
   });
 });

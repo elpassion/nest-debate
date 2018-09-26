@@ -2,7 +2,7 @@ import IDebatesRepository from '../domain/debates/debates_repository';
 import IVotesRepository from '../domain/debates/votes_repository';
 import InMemoryDebatesRepository from '../repositories/in_memory_debates_repository';
 import InMemoryVotesRepository from '../repositories/in_memory_votes_repository';
-import { VoteId } from '../domain/debates/vote';
+import Vote, { VoteId } from '../domain/debates/vote';
 import Debate, { DebateId } from '../domain/debates/debate';
 import VotingService, { IVotingService, VoteType } from './voting.service';
 
@@ -36,11 +36,13 @@ describe('VotingService', () => {
       expect(vote.debateId.equals(debateId)).toBe(true);
     });
 
-    it('persists new vote', async () => {
-      const vote = await service.createVote(debateId, VoteType.POSITIVE);
-      const persisted = await votesRepository.get(vote.id);
+    describe.each([VoteType.POSITIVE, VoteType.NEGATIVE, VoteType.NEUTRAL])('create %s vote', (voteType) => {
+      it('persists new vote', async () => {
+        const vote = await service.createVote(debateId, voteType);
+        const persisted = await votesRepository.get(vote.id);
 
-      expect(persisted).not.toBeNull();
+        expect(persisted).not.toBeNull();
+      });
     });
   });
 
@@ -53,10 +55,18 @@ describe('VotingService', () => {
     });
 
     it('updates vote', async () => {
-      const vote = await service.changeVote(debateId, voteId, VoteType.NEGATIVE);
+      let vote: Vote;
 
-      expect(vote).toBeDefined();
+      vote = await service.changeVote(debateId, voteId, VoteType.NEGATIVE);
       expect(vote.isNegative).toBe(true);
+      expect(vote.debateId.equals(debateId)).toBe(true);
+
+      vote = await service.changeVote(debateId, voteId, VoteType.POSITIVE);
+      expect(vote.isPositive).toBe(true);
+      expect(vote.debateId.equals(debateId)).toBe(true);
+
+      vote = await service.changeVote(debateId, voteId, VoteType.NEUTRAL);
+      expect(vote.isNeutral).toBe(true);
       expect(vote.debateId.equals(debateId)).toBe(true);
     });
 
