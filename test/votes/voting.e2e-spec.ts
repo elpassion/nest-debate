@@ -7,11 +7,13 @@ import Debate, { DebateId } from '../../src/domain/debates/debate';
 import { VoteId } from '../../src/domain/debates/vote';
 import IVotesRepository from '../../src/domain/debates/votes_repository';
 import PinGenerator from '../../src/domain/debates/services/pin_generator';
+import DebatesFactory from '../../src/domain/debates/factories/debates_factory';
 
 describe('Voting (e2e)', () => {
   let app: INestApplication;
   let debatesRepository: IDebatesRepository;
   let votesRepository: IVotesRepository;
+  let debatesFactory: DebatesFactory;
   let debateId: DebateId;
 
   beforeAll(async () => {
@@ -23,14 +25,11 @@ describe('Voting (e2e)', () => {
     debatesRepository = moduleFixture.get<IDebatesRepository>('IDebatesRepository');
     votesRepository = moduleFixture.get<IVotesRepository>('IVotesRepository');
 
-    debateId = await debatesRepository.nextId();
-    const debate = new Debate(debateId, 'question');
-    debate.setPositiveAnswer('Positive Answer');
-    debate.setNegativeAnswer('Negative Answer');
-    debate.setNeutralAnswer('Neutral Answer');
-    await debate.pickPin(new PinGenerator(debatesRepository));
-    debate.publish();
+    debatesFactory = new DebatesFactory(debatesRepository, new PinGenerator(debatesRepository));
+
+    const debate = await debatesFactory.createPublished('Question', 'Yes', 'No', 'Maybe');
     await debatesRepository.save(debate);
+    debateId = debate.id;
 
     await app.init();
   });

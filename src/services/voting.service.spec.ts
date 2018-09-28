@@ -6,6 +6,7 @@ import Vote, { VoteId } from '../domain/debates/vote';
 import Debate, { DebateId } from '../domain/debates/debate';
 import VotingService, { IVotingService, VoteType } from './voting.service';
 import PinGenerator from '../domain/debates/services/pin_generator';
+import DebatesFactory from '../domain/debates/factories/debates_factory';
 
 describe('VotingService', () => {
   let debatesRepository: IDebatesRepository;
@@ -19,14 +20,11 @@ describe('VotingService', () => {
     votesRepository = new InMemoryVotesRepository();
     service = new VotingService(debatesRepository, votesRepository);
 
-    debateId = await debatesRepository.nextId();
-    const debate = new Debate(debateId, 'question');
-    debate.setPositiveAnswer('Positive Answer');
-    debate.setNegativeAnswer('Negative Answer');
-    debate.setNeutralAnswer('Neutral Answer');
-    await debate.pickPin(new PinGenerator(debatesRepository));
-    debate.publish();
+    const debatesFactory = new DebatesFactory(debatesRepository, new PinGenerator(debatesRepository));
+
+    const debate = await debatesFactory.createPublished('Question', 'Yes', 'No', 'Maybe');
     await debatesRepository.save(debate);
+    debateId = await debate.id;
   });
 
   describe('create vote', () => {
