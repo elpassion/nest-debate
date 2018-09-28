@@ -1,4 +1,4 @@
-import DateProvider from './date_provider';
+import DateProvider from '../date_provider';
 
 describe('DateProvider', () => {
   const ONE_SECOND = 1000;

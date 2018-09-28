@@ -1,11 +1,11 @@
-import DebatesFactory from './factories/debates_factory';
-import Debate, { VotingNotPossibleError } from './debate';
-import IDebatesRepository from './debates_repository';
-import PinGenerator, { IPinGenerator } from './services/pin_generator';
-import InMemoryDebatesRepository from '../../repositories/in_memory_debates_repository';
-import IVotesRepository from './votes_repository';
-import InMemoryVotesRepository from '../../repositories/in_memory_votes_repository';
-import Vote, { VoteId } from './vote';
+import DebatesFactory from '../factories/debates_factory';
+import Debate, { VotingNotPossibleError } from '../debate';
+import IDebatesRepository from '../debates_repository';
+import PinGenerator, { IPinGenerator } from '../services/pin_generator';
+import InMemoryDebatesRepository from '../../../repositories/in_memory_debates_repository';
+import IVotesRepository from '../votes_repository';
+import InMemoryVotesRepository from '../../../repositories/in_memory_votes_repository';
+import Vote, { VoteId } from '../vote';
 
 describe('Debate', () => {
   let debatesRepository: IDebatesRepository;

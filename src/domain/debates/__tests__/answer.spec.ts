@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
-import { DebateId } from './debate';
-import Answer, { AnswerType } from './answer';
+import { DebateId } from '../debate';
+import Answer, { AnswerType } from '../answer';
 
 describe('Answer', () => {
   let debateId: DebateId;

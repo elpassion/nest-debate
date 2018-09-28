@@ -1,6 +1,6 @@
-import Publication, { StartIsNotBeforeFinish } from './publication';
-import DateProvider from '../support/date_provider';
-import DateUtils from '../support/date_utils';
+import Publication, { StartIsNotBeforeFinish } from '../publication';
+import DateProvider from '../../support/date_provider';
+import DateUtils from '../../support/date_utils';
 
 describe('Publication', () => {
   let now: Date;

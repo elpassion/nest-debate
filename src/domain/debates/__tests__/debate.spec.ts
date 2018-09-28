@@ -1,10 +1,10 @@
 import * as uuid from 'uuid';
 
-import Debate, { DebateId, AnswersMissing, VotingNotPossibleError, PinNotSet } from './debate';
-import Answer, { AnswerType } from './answer';
-import Vote, { VoteId } from './vote';
-import DateProvider from '../support/date_provider';
-import { IPinGenerator } from './services/pin_generator';
+import Debate, { DebateId, AnswersMissing, VotingNotPossibleError, PinNotSet } from '../debate';
+import Answer, { AnswerType } from '../answer';
+import Vote, { VoteId } from '../vote';
+import DateProvider from '../../support/date_provider';
+import { IPinGenerator } from '../services/pin_generator';
 
 class PinGenerator implements IPinGenerator {
   public async getRandomPin(): Promise<string> {

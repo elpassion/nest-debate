@@ -1,7 +1,7 @@
 import * as uuid from 'uuid';
-import { DebateId } from './debate';
-import Answer from './answer';
-import Vote, { VoteId, CantChangeVoteDebateError } from './vote';
+import { DebateId } from '../debate';
+import Answer from '../answer';
+import Vote, { VoteId, CantChangeVoteDebateError } from '../vote';
 
 describe('Vote', () => {
   let debateId: DebateId;

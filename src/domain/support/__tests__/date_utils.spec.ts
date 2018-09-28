@@ -1,4 +1,4 @@
-import DateUtils from './date_utils';
+import DateUtils from '../date_utils';
 
 describe('DateUtils', () => {
   const minute = 1000 * 60;

@@ -1,4 +1,4 @@
-import PinGenerator, { IPinReservation, PinAlreadyReserved, IPinGenerator, PinCannotBeGenerated } from './pin_generator';
+import PinGenerator, { IPinReservation, PinAlreadyReserved, IPinGenerator, PinCannotBeGenerated } from '../pin_generator';
 
 class FailingPinReservation implements IPinReservation {
   private _numTries = 0;
