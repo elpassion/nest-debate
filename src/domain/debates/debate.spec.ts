@@ -157,50 +157,6 @@ describe('Debate', () => {
     });
   });
 
-  describe('Voting', () => {
-    describe('when debate is published', () => {
-      let newVoteId: VoteId;
-
-      beforeEach(async () => {
-        newVoteId = new VoteId(uuid.v4());
-
-        debate.setPositiveAnswer('Yes');
-        debate.setNegativeAnswer('No');
-        debate.setNeutralAnswer('Maybe');
-        await debate.pickPin(pinGenerator);
-        debate.publish();
-      });
-
-      it('allows voting for positive answer', () => {
-        const vote: Vote = debate.votePositive(newVoteId);
-
-        expect(vote.isPositive).toBe(true);
-      });
-
-      it('allows voting for positive answer', () => {
-        const vote: Vote = debate.voteNegative(newVoteId);
-
-        expect(vote.isNegative).toBe(true);
-      });
-
-      it('allows voting for neutral answer', () => {
-        const vote: Vote = debate.voteNeutral(newVoteId);
-
-        expect(vote.isNeutral).toBe(true);
-      });
-    });
-
-    describe('When debate is not published', () => {
-      it('does not allow voting', () => {
-        const newVoteId = new VoteId(uuid.v4());
-
-        expect(() => { debate.votePositive(newVoteId); }).toThrowError(VotingNotPossibleError);
-        expect(() => { debate.voteNegative(newVoteId); }).toThrowError(VotingNotPossibleError);
-        expect(() => { debate.voteNeutral(newVoteId); }).toThrowError(VotingNotPossibleError);
-      });
-    });
-  });
-
   describe('DebateId', () => {
     it('equals other debate id with same id', () => {
       const stringId = uuid.v4();
