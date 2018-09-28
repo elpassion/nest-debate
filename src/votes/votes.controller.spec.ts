@@ -6,6 +6,7 @@ import InMemoryVotesRepository from '../repositories/in_memory_votes_repository'
 import Debate, { DebateId } from '../domain/debates/debate';
 import { VoteId } from '../domain/debates/vote';
 import VotingService, { IVotingService } from '../services/voting.service';
+import PinGenerator from '../domain/debates/services/pin_generator';
 
 describe('Votes Controller', () => {
   let debatesRepository: IDebatesRepository;
@@ -23,6 +24,7 @@ describe('Votes Controller', () => {
     debate.setPositiveAnswer('Positive Answer');
     debate.setNegativeAnswer('Negative Answer');
     debate.setNeutralAnswer('Neutral Answer');
+    await debate.pickPin(new PinGenerator(debatesRepository));
     debate.publish();
     await debatesRepository.save(debate);
 

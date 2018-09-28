@@ -6,6 +6,7 @@ import IDebatesRepository from '../../src/domain/debates/debates_repository';
 import Debate, { DebateId } from '../../src/domain/debates/debate';
 import { VoteId } from '../../src/domain/debates/vote';
 import IVotesRepository from '../../src/domain/debates/votes_repository';
+import PinGenerator from '../../src/domain/debates/services/pin_generator';
 
 describe('Voting (e2e)', () => {
   let app: INestApplication;
@@ -27,6 +28,7 @@ describe('Voting (e2e)', () => {
     debate.setPositiveAnswer('Positive Answer');
     debate.setNegativeAnswer('Negative Answer');
     debate.setNeutralAnswer('Neutral Answer');
+    await debate.pickPin(new PinGenerator(debatesRepository));
     debate.publish();
     await debatesRepository.save(debate);
 

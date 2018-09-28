@@ -3,6 +3,7 @@ import Answer, { AnswerType } from './answer';
 import DateProvider from '../support/date_provider';
 import Vote, { VoteId } from './vote';
 import Publication from './publication';
+import { IPinGenerator } from './services/pin_generator';
 
 export class DebateId extends AggregateId {
   public equals(other: any): boolean {
@@ -12,12 +13,14 @@ export class DebateId extends AggregateId {
 
 export class AnswersMissing extends Error {}
 export class VotingNotPossibleError extends Error {}
+export class PinNotSet extends Error {}
 
 export default class Debate {
   private _positiveAnswer: Answer = null;
   private _negativeAnswer: Answer = null;
   private _neutralAnswer: Answer = null;
   private _publication: Publication = new Publication();
+  private _pin: string = null;
 
   constructor(readonly id: DebateId, private _question: string) {
   }
@@ -40,6 +43,7 @@ export default class Debate {
 
   public schedulePublicationAt(date: Date): void {
     if (!this.allAnswersSet()) { throw new AnswersMissing('some answers are missing'); }
+    if (!this._pin) { throw new PinNotSet(); }
 
     this._publication = this._publication.startAt(date);
   }
@@ -66,6 +70,10 @@ export default class Debate {
 
   public voteNeutral(voteId: VoteId): Vote {
     return this.voteFor(voteId, this._neutralAnswer);
+  }
+
+  public async pickPin(pinGenerator: IPinGenerator): Promise<void> {
+    this._pin = await pinGenerator.getRandomPin();
   }
 
   public get question(): string { return this._question; }

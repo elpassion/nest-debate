@@ -1,21 +1,33 @@
 import * as uuid from 'uuid';
 
-import Debate, { DebateId, AnswersMissing, VotingNotPossibleError } from './debate';
+import Debate, { DebateId, AnswersMissing, VotingNotPossibleError, PinNotSet } from './debate';
 import Answer, { AnswerType } from './answer';
 import Vote, { VoteId } from './vote';
 import DateProvider from '../support/date_provider';
+import { IPinGenerator } from './services/pin_generator';
+
+class PinGenerator implements IPinGenerator {
+  public async getRandomPin(): Promise<string> {
+    const min = 10000;
+    const max = 99999;
+
+    return (Math.floor(Math.random() * (max - min + 1) + min)).toString();
+  }
+}
 
 describe('Debate', () => {
   let debateQuestion: string;
   let ownerId: string;
   let debateId: DebateId;
   let debate: Debate;
+  let pinGenerator: IPinGenerator;
 
   beforeEach(() => {
     debateId = new DebateId(uuid.v4());
     debateQuestion = 'Debate question';
     ownerId = uuid.v4();
     debate = new Debate(debateId, debateQuestion);
+    pinGenerator = new PinGenerator();
   });
 
   it('has question', () => {
@@ -63,38 +75,54 @@ describe('Debate', () => {
         debate.setNeutralAnswer('Maybe');
       });
 
-      it('can be published when all answers are set', () => {
-        debate.publish();
+      describe('when pin not set', () => {
+        it('cannot be published', () => {
+          expect(() => { debate.publish(); }).toThrowError(PinNotSet);
+        });
 
-        expect(debate.isPublished).toBe(true);
+        it('cannot be scheduled for publication', () => {
+          expect(() => { debate.schedulePublicationAt(new Date()); }).toThrowError(PinNotSet);
+        });
       });
 
-      it('can be scheduled for publication', () => {
-        const publishAt = new Date(new Date().getTime() + 1000 * 60 * 5);
-        debate.schedulePublicationAt(publishAt);
+      describe('when PIN set', () => {
+        beforeEach(async () => {
+          await debate.pickPin(pinGenerator);
+        });
 
-        expect(debate.isPublished).toBe(false);
+        it('can be published when all answers are set', () => {
+          debate.publish();
 
-        travelInTimeTo(publishAt, () => {
           expect(debate.isPublished).toBe(true);
         });
-      });
 
-      it('can be scheduled for closing', () => {
-        const closeAt = new Date(new Date().getTime() + 1000 * 60 * 5);
-        debate.publish();
-        debate.scheduleClosingAt(closeAt);
+        it('can be scheduled for publication', () => {
+          const publishAt = new Date(new Date().getTime() + 1000 * 60 * 5);
+          debate.schedulePublicationAt(publishAt);
 
-        travelInTimeTo(closeAt, () => {
+          expect(debate.isPublished).toBe(false);
+
+          travelInTimeTo(publishAt, () => {
+            expect(debate.isPublished).toBe(true);
+          });
+        });
+
+        it('can be scheduled for closing', () => {
+          const closeAt = new Date(new Date().getTime() + 1000 * 60 * 5);
+          debate.publish();
+          debate.scheduleClosingAt(closeAt);
+
+          travelInTimeTo(closeAt, () => {
+            expect(debate.isPublished).toBe(false);
+          });
+        });
+
+        it('can be closed', () => {
+          debate.publish();
+          debate.close();
+
           expect(debate.isPublished).toBe(false);
         });
-      });
-
-      it('can be closed', () => {
-        debate.publish();
-        debate.close();
-
-        expect(debate.isPublished).toBe(false);
       });
     });
 
@@ -133,12 +161,13 @@ describe('Debate', () => {
     describe('when debate is published', () => {
       let newVoteId: VoteId;
 
-      beforeEach(() => {
+      beforeEach(async () => {
         newVoteId = new VoteId(uuid.v4());
 
         debate.setPositiveAnswer('Yes');
         debate.setNegativeAnswer('No');
         debate.setNeutralAnswer('Maybe');
+        await debate.pickPin(pinGenerator);
         debate.publish();
       });
 
