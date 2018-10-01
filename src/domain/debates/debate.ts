@@ -100,9 +100,9 @@ export default class Debate {
     return {
       id: this.id.toString(),
       question: this.question,
-      positiveAnswer: this.positiveAnswer && this.positiveAnswer.answer,
-      negativeAnswer: this.negativeAnswer && this.negativeAnswer.answer,
-      neutralAnswer: this.neutralAnswer && this.neutralAnswer.answer,
+      positiveAnswer: this.positiveAnswer && this.positiveAnswer.toString(),
+      negativeAnswer: this.negativeAnswer && this.negativeAnswer.toString(),
+      neutralAnswer: this.neutralAnswer && this.neutralAnswer.toString(),
       publicationStartDate: publicationSnapshot.startDate,
       publicationFinishDate: publicationSnapshot.finishDate,
       pin: this._pin,

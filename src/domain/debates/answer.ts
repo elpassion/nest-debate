@@ -20,12 +20,16 @@ export default class Answer implements IValueObject {
     return new Answer(debateId, AnswerType.NEUTRAL, answer);
   }
 
-  constructor(readonly debateId: DebateId, readonly answerType: AnswerType, readonly answer: string) {}
+  constructor(readonly debateId: DebateId, readonly answerType: AnswerType, private readonly _answer: string) {}
 
   public equals(other: any): boolean {
     return (other instanceof Answer)
              && this.debateId.equals(other.debateId)
              && this.answerType === other.answerType
-             && this.answer === other.answer;
+             && this._answer === other._answer;
+  }
+
+  public toString(): string {
+    return this._answer;
   }
 }

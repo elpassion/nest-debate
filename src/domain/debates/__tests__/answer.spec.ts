@@ -61,4 +61,11 @@ describe('Answer', () => {
       expect(neutralAnswer.answerType).toBe(AnswerType.NEUTRAL);
     });
   });
+
+  describe('toString', () => {
+    it('returns answer string', () => {
+      const positiveAnswer = Answer.createPositive(debateId, answer);
+      expect(positiveAnswer.toString()).toBe(answer);
+    });
+  });
 });
