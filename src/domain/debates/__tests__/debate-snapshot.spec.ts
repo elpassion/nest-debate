@@ -1,3 +1,4 @@
+import * as uuid from 'uuid';
 import InMemoryDebatesRepository from '../../../repositories/in_memory_debates_repository';
 import DebatesFactory from '../factories/debates_factory';
 import { IPinGenerator } from '../services/pin_generator';
@@ -13,28 +14,28 @@ class StaticPinGenerator implements IPinGenerator {
 }
 
 describe('Debate', () => {
+  let debate: Debate;
+  let snapshot: IDebateSnapshot;
+
+  const question = 'Question';
+  const positiveAnswer = 'Yes';
+  const negativeAnswer = 'No';
+  const neutralAnswer = 'Maybe';
+  const publicationStart = new Date();
+  const finishDate = DateUtils.moveDate(publicationStart, { hours: 5 });
+  const pin = '10293';
+
+  beforeEach(async () => {
+    const debatesRepository = new InMemoryDebatesRepository();
+    const debatesFactory = new DebatesFactory(debatesRepository, new StaticPinGenerator(pin));
+    debate = await debatesFactory.createReadyForPublication(question, positiveAnswer, negativeAnswer, neutralAnswer);
+    debate.schedulePublicationAt(publicationStart);
+    debate.scheduleClosingAt(finishDate);
+
+    snapshot = debate.snapshot;
+  });
+
   describe('snapshot', () => {
-    let debate: Debate;
-    let snapshot: IDebateSnapshot;
-
-    const question = 'Question';
-    const positiveAnswer = 'Yes';
-    const negativeAnswer = 'No';
-    const neutralAnswer = 'Maybe';
-    const publicationStart = new Date();
-    const finishDate = DateUtils.moveDate(publicationStart, { hours: 5 });
-    const pin = '10293';
-
-    beforeEach(async () => {
-      const debatesRepository = new InMemoryDebatesRepository();
-      const debatesFactory = new DebatesFactory(debatesRepository, new StaticPinGenerator(pin));
-      debate = await debatesFactory.createReadyForPublication(question, positiveAnswer, negativeAnswer, neutralAnswer);
-      debate.schedulePublicationAt(publicationStart);
-      debate.scheduleClosingAt(finishDate);
-
-      snapshot = debate.snapshot;
-    });
-
     it('has id', () => {
       expect(snapshot.id).toBe(debate.id.toString());
     });
@@ -65,6 +66,13 @@ describe('Debate', () => {
 
     it('has pin', () => {
       expect(snapshot.pin).toBe(pin);
+    });
+  });
+
+  describe('loadFromSnapshot', () => {
+    it('is same as debate from which snapshot was made', () => {
+      const debateFromSnapshot = Debate.loadFromSnapshot(snapshot);
+      expect(debate.snapshot).toEqual(debateFromSnapshot.snapshot);
     });
   });
 });

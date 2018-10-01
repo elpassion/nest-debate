@@ -27,13 +27,21 @@ export class VotingNotPossibleError extends Error {}
 export class PinNotSet extends Error {}
 
 export default class Debate {
+  public static loadFromSnapshot(snapshot: IDebateSnapshot): Debate {
+    const debateId = new DebateId(snapshot.id);
+    const debate = new Debate(debateId, snapshot.question);
+    debate.loadSnapshot(snapshot);
+
+    return debate;
+  }
+
   private _positiveAnswer: Answer = null;
   private _negativeAnswer: Answer = null;
   private _neutralAnswer: Answer = null;
   private _publication: Publication = new Publication();
   private _pin: string = null;
 
-  constructor(readonly id: DebateId, private _question: string) {}
+  public constructor(readonly id: DebateId, private _question: string) {}
 
   public updateQuestion(newQuestion: string): void {
     this._question = newQuestion;
@@ -107,6 +115,15 @@ export default class Debate {
       publicationFinishDate: publicationSnapshot.finishDate,
       pin: this._pin,
     };
+  }
+
+  protected loadSnapshot(snapshot: IDebateSnapshot): void {
+    this.setPositiveAnswer(snapshot.positiveAnswer);
+    this.setNegativeAnswer(snapshot.negativeAnswer);
+    this.setNeutralAnswer(snapshot.neutralAnswer);
+
+    this._pin = snapshot.pin;
+    this._publication = new Publication(snapshot.publicationStartDate, snapshot.publicationFinishDate);
   }
 
   private allAnswersSet(): boolean {
