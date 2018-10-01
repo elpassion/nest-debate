@@ -1,5 +1,5 @@
 import AggregateId from '../aggregate_id';
-import Answer, { AnswerType } from './answer';
+import Answer from './answer';
 import DateProvider from '../support/date_provider';
 import Vote, { VoteId } from './vote';
 import Publication from './publication';
@@ -9,6 +9,17 @@ export class DebateId extends AggregateId {
   public equals(other: any): boolean {
     return other instanceof DebateId && this.id === other.id;
   }
+}
+
+export interface IDebateSnapshot {
+  id: string;
+  question: string;
+  positiveAnswer: string|null;
+  negativeAnswer: string|null;
+  neutralAnswer: string|null;
+  publicationStartDate: Date|null;
+  publicationFinishDate: Date|null;
+  pin: string|null;
 }
 
 export class AnswersMissing extends Error {}
@@ -22,8 +33,7 @@ export default class Debate {
   private _publication: Publication = new Publication();
   private _pin: string = null;
 
-  constructor(readonly id: DebateId, private _question: string) {
-  }
+  constructor(readonly id: DebateId, private _question: string) {}
 
   public updateQuestion(newQuestion: string): void {
     this._question = newQuestion;
@@ -80,8 +90,23 @@ export default class Debate {
   public get positiveAnswer(): Answer { return this._positiveAnswer; }
   public get negativeAnswer(): Answer { return this._negativeAnswer; }
   public get neutralAnswer(): Answer { return this._neutralAnswer; }
+
   public get isPublished(): boolean {
     return this._publication.lastsAt(DateProvider.getCurrentDate());
+  }
+
+  public get snapshot(): IDebateSnapshot {
+    const publicationSnapshot = this._publication.snapshot;
+    return {
+      id: this.id.toString(),
+      question: this.question,
+      positiveAnswer: this.positiveAnswer && this.positiveAnswer.answer,
+      negativeAnswer: this.negativeAnswer && this.negativeAnswer.answer,
+      neutralAnswer: this.neutralAnswer && this.neutralAnswer.answer,
+      publicationStartDate: publicationSnapshot.startDate,
+      publicationFinishDate: publicationSnapshot.finishDate,
+      pin: this._pin,
+    };
   }
 
   private allAnswersSet(): boolean {

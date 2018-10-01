@@ -6,9 +6,15 @@ export default class DebatesFactory {
   constructor(private readonly _debatesRepository: IDebatesRepository, private readonly _pinGenerator: IPinGenerator) {}
 
   public async createPublished(question: string, positiveAnswer: string, negativeAnswer: string, neutralAnswer: string): Promise<Debate> {
+    const debate = await this.createReadyForPublication(question, positiveAnswer, negativeAnswer, neutralAnswer);
+    debate.publish();
+
+    return debate;
+  }
+
+  public async createReadyForPublication(question: string, positiveAnswer: string, negativeAnswer: string, neutralAnswer: string): Promise<Debate> {
     const debate = await this.create(question, positiveAnswer, negativeAnswer, neutralAnswer);
     await debate.pickPin(this._pinGenerator);
-    debate.publish();
 
     return debate;
   }

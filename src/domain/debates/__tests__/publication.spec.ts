@@ -1,5 +1,4 @@
-import Publication, { StartIsNotBeforeFinish } from '../publication';
-import DateProvider from '../../support/date_provider';
+import Publication, { StartIsNotBeforeFinish, IPublicationSnapshot } from '../publication';
 import DateUtils from '../../support/date_utils';
 
 describe('Publication', () => {
@@ -116,4 +115,42 @@ describe('Publication', () => {
 
     expect(firstPublication.equals(secondPublication)).toBe(false);
   });
+
+  describe('snapshot', () => {
+    let startAt: Date;
+    let finishAt: Date;
+    let snapshot: IPublicationSnapshot;
+
+    beforeEach(() => {
+      startAt = DateUtils.moveDate(now, {minutes: -5});
+      finishAt = DateUtils.moveDate(now, {minutes: 5});
+      const publication = new Publication(startAt, finishAt);
+      snapshot = publication.snapshot;
+    });
+
+    it('has proper start date', () => {
+      expect(snapshot.startDate.getTime()).toBe(startAt.getTime());
+    });
+
+    it('has proper finish date', () => {
+      expect(snapshot.finishDate.getTime()).toBe(finishAt.getTime());
+    });
+
+    describe('when no dates set', () => {
+      beforeEach(() => {
+        const publication = new Publication();
+        snapshot = publication.snapshot;
+      });
+
+      it('has empty start date', () => {
+        expect(snapshot.startDate).toBeNull();
+      });
+
+      it('has empty finish date', () => {
+        expect(snapshot.finishDate).toBeNull();
+      });
+
+    });
+  });
+
 });

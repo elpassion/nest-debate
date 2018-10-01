@@ -2,6 +2,11 @@ import { IValueObject } from '../value_object';
 
 export class StartIsNotBeforeFinish extends Error {}
 
+export interface IPublicationSnapshot {
+  startDate: Date|null;
+  finishDate: Date|null;
+}
+
 export default class Publication implements IValueObject {
   constructor(protected readonly startDate?: Date, protected readonly finishDate?: Date) {
     this.checkThatStartIsBeforeFinish();
@@ -23,6 +28,13 @@ export default class Publication implements IValueObject {
     return (other instanceof Publication)
       && this.startDate.getTime() === other.startDate.getTime()
       && this.finishDate.getTime() === other.finishDate.getTime();
+  }
+
+  public get snapshot(): IPublicationSnapshot {
+    return {
+      startDate: this.startDate || null,
+      finishDate: this.finishDate || null,
+    };
   }
 
   private startedBefore(date: Date): boolean {
