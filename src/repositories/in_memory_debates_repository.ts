@@ -1,11 +1,11 @@
 import * as uuid from 'uuid';
 
 import IDebatesRepository from '../domain/debates/debates_repository';
-import Debate, { DebateId } from '../domain/debates/debate';
+import Debate, { DebateId, IDebateSnapshot } from '../domain/debates/debate';
 import { PinAlreadyReserved } from '../domain/debates/services/pin_generator';
 
 export default class InMemoryDebatesRepository implements IDebatesRepository {
-  private _debates = new Map<string, Debate>();
+  private _debates = new Map<string, IDebateSnapshot>();
   private _reservedPins: Array<string> = [];
 
   public nextId(): Promise<DebateId> {
@@ -14,18 +14,19 @@ export default class InMemoryDebatesRepository implements IDebatesRepository {
   }
 
   public get(debateId: DebateId): Promise<Debate> {
-    const debate = this._debates.get(debateId.toString());
-    return Promise.resolve(debate || null);
+    const debateSnapshot = this._debates.get(debateId.toString());
+    const debate = (debateSnapshot && Debate.loadFromSnapshot(debateSnapshot)) || null;
+    return Promise.resolve(debate);
   }
 
   public save(debate: Debate): Promise<void> {
-    this._debates.set(debate.id.toString(), debate);
+    this._debates.set(debate.id.toString(), debate.snapshot);
     return Promise.resolve();
   }
 
   public all(): Promise<Debate[]> {
-    const debates = this._debates.values();
-    return Promise.resolve(Array.from(debates));
+    const debatesSnapshots = Array.from(this._debates.values());
+    return Promise.resolve(Array.from(debatesSnapshots.map(Debate.loadFromSnapshot)));
   }
 
   public delete(debate: Debate): Promise<void> {
