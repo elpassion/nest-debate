@@ -43,4 +43,14 @@ describe('DateUtils', () => {
       expect(DateUtils.moveDate(currentDate, {minutes: 5}).getTime()).toBe(futureDate.getTime());
     });
   });
+
+  describe('.copy', () => {
+    it('copies provided date', () => {
+      const date = new Date();
+      const dateCopy = DateUtils.copy(date);
+
+      expect(dateCopy).not.toBe(date);
+      expect(dateCopy.getTime()).toBe(date.getTime());
+    });
+  });
 });

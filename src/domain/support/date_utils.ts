@@ -17,4 +17,8 @@ export default class DateUtils {
 
     return new Date(date.getTime() + minutes + hours + days);
   }
+
+  public static copy(date: Date): Date {
+    return new Date(date.getTime());
+  }
 }

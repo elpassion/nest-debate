@@ -1,4 +1,5 @@
 import { IValueObject } from '../value_object';
+import DateUtils from '../support/date_utils';
 
 export class StartIsNotBeforeFinish extends Error {}
 
@@ -8,7 +9,13 @@ export interface IPublicationSnapshot {
 }
 
 export default class Publication implements IValueObject {
-  constructor(protected readonly startDate?: Date, protected readonly finishDate?: Date) {
+  protected readonly startDate: Date;
+  protected readonly finishDate: Date;
+
+  constructor(startDate?: Date, finishDate?: Date) {
+    startDate && (this.startDate = DateUtils.copy(startDate));
+    finishDate && (this.finishDate = DateUtils.copy(finishDate));
+
     this.checkThatStartIsBeforeFinish();
   }
 
