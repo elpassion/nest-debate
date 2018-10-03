@@ -57,11 +57,11 @@ describe('Debate', () => {
     });
 
     it('has publication start date', () => {
-      expect(snapshot.publicationStartDate.getTime()).toBe(publicationStart.getTime());
+      expect(snapshot.publication.startDate.getTime()).toBe(publicationStart.getTime());
     });
 
     it('has publication finish date', () => {
-      expect(snapshot.publicationFinishDate.getTime()).toBe(finishDate.getTime());
+      expect(snapshot.publication.finishDate.getTime()).toBe(finishDate.getTime());
     });
 
     it('has pin', () => {

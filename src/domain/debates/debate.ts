@@ -2,7 +2,7 @@ import AggregateId from '../aggregate_id';
 import Answer from './answer';
 import DateProvider from '../support/date_provider';
 import Vote, { VoteId } from './vote';
-import Publication from './publication';
+import Publication, { IPublicationSnapshot } from './publication';
 import { IPinGenerator } from './services/pin_generator';
 
 export class DebateId extends AggregateId {
@@ -17,8 +17,7 @@ export interface IDebateSnapshot {
   positiveAnswer: string|null;
   negativeAnswer: string|null;
   neutralAnswer: string|null;
-  publicationStartDate: Date|null;
-  publicationFinishDate: Date|null;
+  publication: IPublicationSnapshot;
   pin: string|null;
 }
 
@@ -111,8 +110,7 @@ export default class Debate {
       positiveAnswer: this.positiveAnswer && this.positiveAnswer.toString(),
       negativeAnswer: this.negativeAnswer && this.negativeAnswer.toString(),
       neutralAnswer: this.neutralAnswer && this.neutralAnswer.toString(),
-      publicationStartDate: publicationSnapshot.startDate,
-      publicationFinishDate: publicationSnapshot.finishDate,
+      publication: this._publication.snapshot,
       pin: this._pin,
     };
   }
@@ -123,7 +121,10 @@ export default class Debate {
     this.setNeutralAnswer(snapshot.neutralAnswer);
 
     this._pin = snapshot.pin;
-    this._publication = new Publication(snapshot.publicationStartDate, snapshot.publicationFinishDate);
+    this._publication = new Publication(
+      snapshot.publication.startDate,
+      snapshot.publication.finishDate,
+    );
   }
 
   private allAnswersSet(): boolean {
