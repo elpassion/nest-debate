@@ -35,12 +35,6 @@ export default class InMemoryDebatesRepository implements IDebatesRepository {
     this._debates.delete(debate.id.toString());
     return Promise.resolve();
   }
-
-  public async reservePin(pin: string): Promise<void> {
-    if (!!this._reservedPins.find(reservedPin => reservedPin === pin)) { throw new PinAlreadyReserved(); }
-
-    this._reservedPins.push(pin);
-  }
 }
 
 export const provider = {

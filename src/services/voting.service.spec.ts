@@ -5,11 +5,13 @@ import InMemoryVotesRepository from '../repositories/in_memory_votes_repository'
 import Vote, { VoteId } from '../domain/debates/vote';
 import Debate, { DebateId } from '../domain/debates/debate';
 import VotingService, { IVotingService, VoteType } from './voting.service';
-import PinGenerator from '../domain/debates/services/pin_generator';
+import PinGenerator, { IPinReservation } from '../domain/debates/services/pin_generator';
 import DebatesFactory from '../domain/debates/factories/debates_factory';
+import InMemoryPinReservationsRepository from '../repositories/in_memory_pin_reservations_repository';
 
 describe('VotingService', () => {
   let debatesRepository: IDebatesRepository;
+  let pinReservation: IPinReservation;
   let votesRepository: IVotesRepository;
   let service: IVotingService;
 
@@ -18,9 +20,10 @@ describe('VotingService', () => {
   beforeEach(async () => {
     debatesRepository = new InMemoryDebatesRepository();
     votesRepository = new InMemoryVotesRepository();
+    pinReservation = new InMemoryPinReservationsRepository();
     service = new VotingService(debatesRepository, votesRepository);
 
-    const debatesFactory = new DebatesFactory(debatesRepository, new PinGenerator(debatesRepository));
+    const debatesFactory = new DebatesFactory(debatesRepository, new PinGenerator(pinReservation));
 
     const debate = await debatesFactory.createPublished('Question', 'Yes', 'No', 'Maybe');
     await debatesRepository.save(debate);
