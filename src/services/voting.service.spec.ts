@@ -1,13 +1,13 @@
 import IDebatesRepository from '../domain/debates/debates_repository';
 import IVotesRepository from '../domain/debates/votes_repository';
-import InMemoryDebatesRepository from '../repositories/in_memory_debates_repository';
-import InMemoryVotesRepository from '../repositories/in_memory_votes_repository';
+import InMemoryDebatesRepository from '../repositories/in_memory/in_memory_debates_repository';
+import InMemoryVotesRepository from '../repositories/in_memory/in_memory_votes_repository';
 import Vote, { VoteId } from '../domain/debates/vote';
 import Debate, { DebateId } from '../domain/debates/debate';
 import VotingService, { IVotingService, VoteType } from './voting.service';
 import PinGenerator, { IPinReservation } from '../domain/debates/services/pin_generator';
 import DebatesFactory from '../domain/debates/factories/debates_factory';
-import InMemoryPinReservationsRepository from '../repositories/in_memory_pin_reservations_repository';
+import InMemoryPinReservationsRepository from '../repositories/in_memory/in_memory_pin_reservations_repository';
 
 describe('VotingService', () => {
   let debatesRepository: IDebatesRepository;

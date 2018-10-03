@@ -1,15 +1,17 @@
 import DebatesFactory from '../factories/debates_factory';
 import Debate, { VotingNotPossibleError } from '../debate';
 import IDebatesRepository from '../debates_repository';
-import PinGenerator, { IPinGenerator } from '../services/pin_generator';
-import InMemoryDebatesRepository from '../../../repositories/in_memory_debates_repository';
+import PinGenerator, { IPinGenerator, IPinReservation } from '../services/pin_generator';
+import InMemoryDebatesRepository from '../../../repositories/in_memory/in_memory_debates_repository';
 import IVotesRepository from '../votes_repository';
-import InMemoryVotesRepository from '../../../repositories/in_memory_votes_repository';
+import InMemoryVotesRepository from '../../../repositories/in_memory/in_memory_votes_repository';
 import Vote, { VoteId } from '../vote';
+import InMemoryPinReservationsRepository from '../../../repositories/in_memory/in_memory_pin_reservations_repository';
 
 describe('Debate', () => {
   let debatesRepository: IDebatesRepository;
   let votesRepository: IVotesRepository;
+  let pinReservation: IPinReservation;
   let pinGenerator: IPinGenerator;
   let debatesFactory: DebatesFactory;
   let debate: Debate;
@@ -19,7 +21,8 @@ describe('Debate', () => {
     beforeEach(async () => {
       debatesRepository = new InMemoryDebatesRepository();
       votesRepository = new InMemoryVotesRepository();
-      pinGenerator = new PinGenerator(debatesRepository);
+      pinReservation = new InMemoryPinReservationsRepository();
+      pinGenerator = new PinGenerator(pinReservation);
       debatesFactory = new DebatesFactory(debatesRepository, pinGenerator);
 
       newVoteId = await votesRepository.nextId();

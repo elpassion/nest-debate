@@ -1,8 +1,7 @@
 import * as uuid from 'uuid';
 
-import IDebatesRepository from '../domain/debates/debates_repository';
-import Debate, { DebateId, IDebateSnapshot } from '../domain/debates/debate';
-import { PinAlreadyReserved } from '../domain/debates/services/pin_generator';
+import IDebatesRepository from '../../domain/debates/debates_repository';
+import Debate, { DebateId, IDebateSnapshot } from '../../domain/debates/debate';
 
 export default class InMemoryDebatesRepository implements IDebatesRepository {
   private _debates = new Map<string, IDebateSnapshot>();

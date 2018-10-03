@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
-import Vote, { VoteId } from '../domain/debates/vote';
-import IVotesRepository from '../domain/debates/votes_repository';
+import Vote, { VoteId } from '../../domain/debates/vote';
+import IVotesRepository from '../../domain/debates/votes_repository';
 
 export default class InMemoryVotesRepository implements IVotesRepository {
   private _votes = new Map<string, Vote>();

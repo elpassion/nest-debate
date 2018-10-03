@@ -1,11 +1,9 @@
 import * as uuid from 'uuid';
-import InMemoryDebatesRepository from '../../../repositories/in_memory_debates_repository';
+import InMemoryDebatesRepository from '../../../repositories/in_memory/in_memory_debates_repository';
 import DebatesFactory from '../factories/debates_factory';
 import { IPinGenerator } from '../services/pin_generator';
 import Debate, { IDebateSnapshot } from '../debate';
 import DateUtils from '../../support/date_utils';
-
-import DebateSnapshot from '../../../repositories/sql/debate_snapshot.etity';
 
 class StaticPinGenerator implements IPinGenerator {
   constructor(private readonly pin: string) {}

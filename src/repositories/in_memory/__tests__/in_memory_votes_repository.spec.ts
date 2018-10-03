@@ -1,10 +1,10 @@
 import * as uuid from 'uuid';
-import Vote, { VoteId } from '../../domain/debates/vote';
-import Answer from '../../domain/debates/answer';
-import IDebatesRepository from '../../domain/debates/debates_repository';
+import Vote, { VoteId } from '../../../domain/debates/vote';
+import Answer from '../../../domain/debates/answer';
+import IDebatesRepository from '../../../domain/debates/debates_repository';
 import InMemoryDebatesRepository from '../in_memory_debates_repository';
 import InMemoryVotesRepository from '../in_memory_votes_repository';
-import IVotesRepository from '../../domain/debates/votes_repository';
+import IVotesRepository from '../../../domain/debates/votes_repository';
 
 describe('VotesRepository', () => {
   let votesRepository: IVotesRepository;

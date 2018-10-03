@@ -1,4 +1,4 @@
-import { PinAlreadyReserved, IPinReservation } from '../domain/debates/services/pin_generator';
+import { PinAlreadyReserved, IPinReservation } from '../../domain/debates/services/pin_generator';
 
 export default class InMemoryPinReservationsRepository implements IPinReservation {
   private _reservedPins: Array<string> = [];
