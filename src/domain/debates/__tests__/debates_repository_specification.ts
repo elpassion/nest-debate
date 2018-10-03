@@ -1,15 +1,14 @@
 import IDebatesRepository from '../debates_repository';
 import Debate, { DebateId } from '../debate';
-import { PinAlreadyReserved } from '../services/pin_generator';
 
-type RepositorySetup = () => IDebatesRepository;
+type RepositorySetup = () => Promise<IDebatesRepository>;
 
 const itConformsToDebateRepositorySpecification = ( repositorySetup: RepositorySetup ) => {
   describe('Conforms to DebatesRepository Specification', () => {
     let debatesRepository: IDebatesRepository;
 
-    beforeEach(() => {
-      debatesRepository = repositorySetup();
+    beforeEach(async () => {
+      debatesRepository = await repositorySetup();
     });
 
     it('returns next id', async () => {
@@ -58,11 +57,6 @@ const itConformsToDebateRepositorySpecification = ( repositorySetup: RepositoryS
       const debate = await debatesRepository.get(firstDebateId);
 
       expect(debate).toBeNull();
-    });
-
-    it('throws error if pin already reserverd', async () => {
-      await debatesRepository.reservePin('12345');
-      await expect(debatesRepository.reservePin('12345')).rejects.toThrowError(PinAlreadyReserved);
     });
 
     function createDebate(debateId: DebateId, question: string, positiveAnswer?: string, negativeAnswer?: string, neutralAnswer?: string): Debate {
