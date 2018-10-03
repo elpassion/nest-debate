@@ -12,8 +12,8 @@ export class DebateId extends AggregateId {
 }
 
 export interface IDebateSnapshot {
-  id: string;
-  question: string;
+  id: string|null;
+  question: string|null;
   positiveAnswer: string|null;
   negativeAnswer: string|null;
   neutralAnswer: string|null;
@@ -93,6 +93,16 @@ export default class Debate {
     this._pin = await pinGenerator.getRandomPin();
   }
 
+  public dumpStateToSnapshot(snapshot: IDebateSnapshot): void {
+    snapshot.id             = this.id.toString();
+    snapshot.question       = this.question;
+    snapshot.positiveAnswer = this.positiveAnswer && this.positiveAnswer.toString();
+    snapshot.negativeAnswer = this.negativeAnswer && this.negativeAnswer.toString();
+    snapshot.neutralAnswer  = this.neutralAnswer && this.neutralAnswer.toString();
+    snapshot.publication    = this._publication.snapshot;
+    snapshot.pin            = this._pin;
+  }
+
   public get question(): string { return this._question; }
   public get positiveAnswer(): Answer { return this._positiveAnswer; }
   public get negativeAnswer(): Answer { return this._negativeAnswer; }
@@ -100,19 +110,6 @@ export default class Debate {
 
   public get isPublished(): boolean {
     return this._publication.lastsAt(DateProvider.getCurrentDate());
-  }
-
-  public get snapshot(): IDebateSnapshot {
-    const publicationSnapshot = this._publication.snapshot;
-    return {
-      id: this.id.toString(),
-      question: this.question,
-      positiveAnswer: this.positiveAnswer && this.positiveAnswer.toString(),
-      negativeAnswer: this.negativeAnswer && this.negativeAnswer.toString(),
-      neutralAnswer: this.neutralAnswer && this.neutralAnswer.toString(),
-      publication: this._publication.snapshot,
-      pin: this._pin,
-    };
   }
 
   protected loadSnapshot(snapshot: IDebateSnapshot): void {

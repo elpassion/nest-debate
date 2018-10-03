@@ -20,7 +20,9 @@ export default class InMemoryDebatesRepository implements IDebatesRepository {
   }
 
   public save(debate: Debate): Promise<void> {
-    this._debates.set(debate.id.toString(), debate.snapshot);
+    const snapshot = {} as IDebateSnapshot;
+    debate.dumpStateToSnapshot(snapshot);
+    this._debates.set(debate.id.toString(), snapshot);
     return Promise.resolve();
   }
 

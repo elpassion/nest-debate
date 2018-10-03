@@ -5,6 +5,8 @@ import { IPinGenerator } from '../services/pin_generator';
 import Debate, { IDebateSnapshot } from '../debate';
 import DateUtils from '../../support/date_utils';
 
+import DebateSnapshot from '../../../repositories/sql/debate_snapshot.etity';
+
 class StaticPinGenerator implements IPinGenerator {
   constructor(private readonly pin: string) {}
 
@@ -31,8 +33,8 @@ describe('Debate', () => {
     debate = await debatesFactory.createReadyForPublication(question, positiveAnswer, negativeAnswer, neutralAnswer);
     debate.schedulePublicationAt(publicationStart);
     debate.scheduleClosingAt(finishDate);
-
-    snapshot = debate.snapshot;
+    snapshot = {} as IDebateSnapshot;
+    debate.dumpStateToSnapshot(snapshot);
   });
 
   describe('snapshot', () => {
@@ -72,7 +74,9 @@ describe('Debate', () => {
   describe('loadFromSnapshot', () => {
     it('is same as debate from which snapshot was made', () => {
       const debateFromSnapshot = Debate.loadFromSnapshot(snapshot);
-      expect(debate.snapshot).toEqual(debateFromSnapshot.snapshot);
+      const secondSnapshot = {} as IDebateSnapshot;
+      debateFromSnapshot.dumpStateToSnapshot(secondSnapshot);
+      expect(snapshot).toEqual(secondSnapshot);
     });
   });
 });
