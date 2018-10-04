@@ -5,4 +5,4 @@ import { repositoriesProviders } from './in_memory/repositories.providers';
   providers: [...repositoriesProviders],
   exports: [...repositoriesProviders],
 })
-export class InMemoryRepositories {}
+export class InMemoryRepositoriesModule {}
