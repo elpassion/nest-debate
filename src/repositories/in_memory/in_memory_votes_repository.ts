@@ -20,8 +20,3 @@ export default class InMemoryVotesRepository implements IVotesRepository {
     return Promise.resolve(vote || null);
   }
 }
-
-export const provider = {
-  provide: 'IVotesRepository',
-  useValue: new InMemoryVotesRepository(),
-};

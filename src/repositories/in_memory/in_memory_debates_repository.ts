@@ -35,8 +35,3 @@ export default class InMemoryDebatesRepository implements IDebatesRepository {
     return Promise.resolve();
   }
 }
-
-export const provider = {
-  provide: 'IDebatesRepository',
-  useValue: new InMemoryDebatesRepository(),
-};
