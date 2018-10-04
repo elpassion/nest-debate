@@ -6,7 +6,7 @@ import IDebatesRepository from '../../src/domain/debates/debates_repository';
 import Debate, { DebateId } from '../../src/domain/debates/debate';
 import { VoteId } from '../../src/domain/debates/vote';
 import IVotesRepository from '../../src/domain/debates/votes_repository';
-import PinGenerator from '../../src/domain/debates/services/pin_generator';
+import PinGenerator, { IPinGenerator, IPinReservation } from '../../src/domain/debates/services/pin_generator';
 import DebatesFactory from '../../src/domain/debates/factories/debates_factory';
 
 describe('Voting (e2e)', () => {
@@ -24,8 +24,9 @@ describe('Voting (e2e)', () => {
     app = moduleFixture.createNestApplication();
     debatesRepository = moduleFixture.get<IDebatesRepository>('IDebatesRepository');
     votesRepository = moduleFixture.get<IVotesRepository>('IVotesRepository');
+    const pinReservation = moduleFixture.get<IPinReservation>('IPinReservation');
 
-    debatesFactory = new DebatesFactory(debatesRepository, new PinGenerator(debatesRepository));
+    debatesFactory = new DebatesFactory(debatesRepository, new PinGenerator(pinReservation));
 
     const debate = await debatesFactory.createPublished('Question', 'Yes', 'No', 'Maybe');
     await debatesRepository.save(debate);
