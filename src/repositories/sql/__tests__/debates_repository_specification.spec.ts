@@ -4,6 +4,7 @@ import { debateRepositoryProviders } from '../debate_repository.provider';
 import { databaseProviders } from '../../../database.providers';
 import DebatesRepository from '../debate_repository';
 import { Connection } from 'typeorm';
+import ConfigModule from '../../../config.module';
 
 describe('Sql DebatesRepository', () => {
   let debatesRepository: DebatesRepository;
@@ -11,6 +12,7 @@ describe('Sql DebatesRepository', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
+      imports: [ConfigModule],
       providers: [...databaseProviders, ...debateRepositoryProviders],
     }).compile();
 
